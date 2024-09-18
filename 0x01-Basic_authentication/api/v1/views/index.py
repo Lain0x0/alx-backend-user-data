@@ -10,3 +10,9 @@ from api.v1.views import app_views
 def unauthorized() -> None:
     """GET /api/v1/unauthorized"""
     abort(401)
+
+
+@app_views.route('/forbidden/', strict_slashes=False)
+def forbidden() -> None:
+    """GET /api/v1/forbidden"""
+    abort(403)
