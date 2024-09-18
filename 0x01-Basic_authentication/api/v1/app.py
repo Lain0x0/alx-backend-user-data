@@ -1,59 +1,43 @@
-#!/usr/bin/envpython3
-""" Using Flask and Encoders to manipulate data user """
-from os import getenv
-from api.v1.views import app_views
-from flask import Flask, jsonify, abort, request, abort
-from flask_cors import CORS, cross_origin
-import os
-from api.v1.auth.auth import Auth
-from api.v1.auth.basic_auth import BasicAuth
+#!/usr/bin/env python3
+"""1. Error handler: Unauthorized
+   2. Error handler: Forbidden
+"""
+from flask import Flask, jsonify, abort
+
 
 app = Flask(__name__)
-app.register_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 
-auth = None
-if os.getenv("AUTH_TYPE") == "basic_auth":
-    auth = BasicAuth()
-elif os.getenv("AUTH_TYPE") == "auth":
-    auth = Auth()
+@app_views.route('/unauthorized/', strict_slashes=False)
+def unauthorized() -> None:
+    """GET /api/v1/unauthorized
+    Return:
+      - Unauthorized error.
+    """
+    abort(401)
 
 
-@app.before_request
-def before_request_func():
-    """bla bla bla annoted"""
-    if auth is None:
-        return
-    if not auth.require_auth(request.path, ['/api/v1/status/',
-                                            '/api/v1/unauthorized/',
-                                            '/api/v1/forbidden/']):
-        return
-    if auth.authorization_header(request) is None:
-        abort(401)
-    if auth.current_user(request) is None:
-        abort(403)
+"""
+@app_views.route('/status', methods=['GET'], strict_slashes=False)
+def status() -> str:
+    GET /api/v1/status
+    return jsonify({"status": "OK"})
 
+@app_views.route('/stats/', strict_slashes=False)
+def stats() -> str:
+    GET /api/v1/stats
+    Return:
+      - the number of each objects.
+    from models.user import User
+    stats = {}
+    stats['users'] = User.count()
+    return jsonify(stats)
 
-@app.errorhandler(401)
-def unauthorized(error) -> str:
-    """Unauthorized handler"""
-    return jsonify({"error": "Unauthorized"}), 401
-
-
-@app.errorhandler(403)
-def forbidden(error):
-    """Error 403 Forbidden"""
-    return jsonify({"error": "Forbidden"}), 403
-
-
-@app.errorhandler(404)
-def not_found(error) -> str:
-    """Found None"""
-    return jsonify({"error": "Not found"}), 404
-
-
-if __name__ == "__main__":
-    host = getenv("API_HOST", "0.0.0.0")
-    port = getenv("API_PORT", "5000")
-    app.run(host=host, port=port)
+@app_views.route('/forbidden/', strict_slashes=False)
+def forbidden() -> None:
+    GET /api/v1/forbidden
+    Return:
+      - Forbidden error.
+    abort(403)
+"""
