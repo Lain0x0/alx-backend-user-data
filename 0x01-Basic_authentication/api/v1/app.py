@@ -9,7 +9,6 @@ from api.v1.views import app_views
 
 
 app = Flask(__name__)
-app.registre_blueprint(app_views)
 CORS(app, resources={r"/api/v1/*": {"origins": "*"}})
 
 
