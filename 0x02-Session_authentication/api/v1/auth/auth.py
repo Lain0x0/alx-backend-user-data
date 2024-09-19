@@ -4,6 +4,7 @@ Authentication
 """
 import fnmatch
 from typing import List, TypeVar
+import os
 
 User = TypeVar('User')
 
