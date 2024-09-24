@@ -2,6 +2,8 @@
 """ Hashing Passwords Using bcrypt"""
 import bcrypt
 from db import DB
+from user import User
+from sqlalchemy.orm.exc import NoResultFound
 
 
 def _hash_password(password: str) -> str:
