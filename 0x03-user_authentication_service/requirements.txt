@@ -1,0 +1,4 @@
+pycodestyle
+SQLAlchemy
+bcrypt
+requests
