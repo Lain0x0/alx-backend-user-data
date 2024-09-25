@@ -1,16 +1,28 @@
 #!/usr/bin/env python3
 """ Hashing Passwords Using bcrypt"""
 from typing import Union
-import uuid
 import bcrypt
 from db import DB
 from user import User
 from sqlalchemy.orm.exc import NoResultFound
+from uuid import uuid4
 
 
 def _hash_password(password: str) -> str:
     """bcrypt for pass hashing"""
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode()
+
+
+def _generate_uuid() -> str:
+    """
+    Raises:
+        ValueError: _description_
+
+    Returns:
+        str: _description_
+    """
+    id = uuid4()
+    return str(id)
 
 
 class Auth:
