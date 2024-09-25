@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """ Set up Flask for web Dev and configure it """
 from flask import Flask, abort, jsonify, redirect, request, url_for
-from auth import Auth
+
 
 app = Flask(__name__)
-AUTH = Auth()
 
 
 @app.route("/", methods=["GET"], strict_slashes=False)
