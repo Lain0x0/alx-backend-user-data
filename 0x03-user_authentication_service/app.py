@@ -1,15 +1,29 @@
 #!/usr/bin/env python3
 """ Set up Flask for web Dev and configure it """
 from flask import Flask, abort, jsonify, redirect, request, url_for
+from auth import Auth
 
 
 app = Flask(__name__)
+AUTH = Auth()
 
 
 @app.route("/", methods=["GET"], strict_slashes=False)
 def index() -> str:
     """GET /users"""
     return jsonify({"message": "Bienvenue"})
+
+
+@app.route('/users', methods=['POST'], strict_slashes=False)
+def users() -> str:
+    """POST /users"""
+    try:
+        email = request.form.get('email')
+        password = request.form.get('password')
+        AUTH.register_user(email, password)
+        return jsonify({"email": email, "message": "user created"}), 200
+    except ValueError:
+        return jsonify({"message": "email already registered"}), 400
 
 
 if __name__ == "__main__":
